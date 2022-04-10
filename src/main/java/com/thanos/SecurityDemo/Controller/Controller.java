@@ -45,17 +45,17 @@ public class Controller {
     }
 
     @GetMapping("/customer/ID/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable long id){
+    public ResponseEntity<Customer> getCustomerById(@PathVariable("id") long id){
         return new ResponseEntity<>(serviceInterface.getById(id),HttpStatus.FOUND);
     }
 
     @PutMapping("/updateCus/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable long id, @RequestBody Customer cus){
+    public ResponseEntity<Customer> updateCustomer(@PathVariable("id") long id, @RequestBody Customer cus){
         return new ResponseEntity<>(serviceInterface.updateCustomer(id, cus),HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/deleteCus/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable long id){
+    public ResponseEntity<Void> deleteCustomer(@PathVariable("id") long id){
         serviceInterface.deleteCustomer(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
