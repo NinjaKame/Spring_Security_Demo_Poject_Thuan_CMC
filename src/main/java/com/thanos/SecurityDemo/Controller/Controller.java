@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@org.springframework.stereotype.Controller
-@RequestMapping
+@RestController
+//@RequestMapping
 public class Controller {
 
     @Autowired
@@ -39,23 +39,23 @@ public class Controller {
         return new ResponseEntity<>(serviceInterface.getAllCustomer(), HttpStatus.OK);
     }
 
+    @GetMapping("/customerID/{id}")
+    public ResponseEntity<Customer> getCustomerById(@PathVariable int id){
+        return new ResponseEntity<>(serviceInterface.getById(id),HttpStatus.FOUND);
+    }
+
     @PostMapping("/addCus")
     public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer){
         return new ResponseEntity<>(serviceInterface.addCustomer(customer),HttpStatus.CREATED);
     }
 
-    @GetMapping("/customer/ID/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable("id") long id){
-        return new ResponseEntity<>(serviceInterface.getById(id),HttpStatus.FOUND);
-    }
-
     @PutMapping("/updateCus/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable("id") long id, @RequestBody Customer cus){
+    public ResponseEntity<Customer> updateCustomer(@PathVariable int id, @RequestBody Customer cus){
         return new ResponseEntity<>(serviceInterface.updateCustomer(id, cus),HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/deleteCus/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable("id") long id){
+    public ResponseEntity<Void> deleteCustomer(@PathVariable int id){
         serviceInterface.deleteCustomer(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

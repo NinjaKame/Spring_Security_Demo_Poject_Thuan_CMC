@@ -8,13 +8,12 @@ public interface ServiceInterface {
 
     List<Customer> getAllCustomer();
 
-    Customer getById(long id);
+    Customer getById(int id);
 
     Customer addCustomer(Customer cus);
 
-    Customer updateCustomer(long id, Customer cus);
+    Customer updateCustomer(int id, Customer cus);
 
-    void deleteCustomer(long id);
-
+    void deleteCustomer(int id);
 
 }
