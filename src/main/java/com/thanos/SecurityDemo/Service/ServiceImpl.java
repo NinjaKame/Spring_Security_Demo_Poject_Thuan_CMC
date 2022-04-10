@@ -23,8 +23,9 @@ public class ServiceImpl implements ServiceInterface, CommandLineRunner {
     }
 
     @Override
-    public Customer getById(long id) {
-        return repository.getById(id);
+    public Customer getById(int id) {
+//        return repository.getById(id);
+        return repository.findById(id).get();
     }
 
     @Override
@@ -33,15 +34,15 @@ public class ServiceImpl implements ServiceInterface, CommandLineRunner {
     }
 
     @Override
-    public Customer updateCustomer(long id, Customer updateCus) {
+    public Customer updateCustomer(int id, Customer updateCus) {
         Customer oldCustomer = repository.getById(id);
         oldCustomer.setName(updateCus.getName()).setEmail(updateCus.getEmail()).setAge(updateCus.getAge());
         return repository.save(oldCustomer);
     }
 
     @Override
-    public void deleteCustomer(long id) {
-        repository.delete(repository.getById(id));
+    public void deleteCustomer(int id) {
+        repository.deleteById(id);
     }
 
 
