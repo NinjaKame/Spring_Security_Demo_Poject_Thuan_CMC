@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -24,8 +25,12 @@ public class ServiceImpl implements ServiceInterface, CommandLineRunner {
 
     @Override
     public Customer getById(int id) {
-//        return repository.getById(id);
-        return repository.findById(id).get();
+        Optional<Customer> result = repository.findById(id);
+        if (result.isPresent()){
+            return result.get();
+        } else {
+            throw new  NoSuchElementException("Customer ID: " +id+ " NOT found. Please try again");
+        }
     }
 
     @Override
@@ -47,7 +52,7 @@ public class ServiceImpl implements ServiceInterface, CommandLineRunner {
 
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         List<Customer> customerList = Arrays.asList(
                 new Customer("John Cena", "Cena@gmail.com", 23),

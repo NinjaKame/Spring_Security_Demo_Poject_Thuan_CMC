@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -31,27 +32,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+//                Get XSRF-TOKEN in Cookies tab of @GetMapping -> Add X-XSRF-TOKEN to Headers KEY and VALUE -> Run api POST, PUT, DELETE
+                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/admin").hasRole("ADMIN")
+
+                .antMatchers("/admin").hasRole(UserRole.ADMIN.name())
                 .antMatchers("/client").hasAnyRole("ADMIN","CLIENT")
-
-//                .antMatchers(HttpMethod.GET,"/allCus","/customerID/*").hasAnyRole("ADMIN","CLIENT")
-//                .antMatchers(HttpMethod.POST,"/addCus").hasRole("ADMIN")
-//                .antMatchers(HttpMethod.PUT,"/updateCus/*").hasRole("ADMIN")
-//                .antMatchers(HttpMethod.DELETE,"/deleteCus/*").hasRole("ADMIN")
-
-//                There are 2 ways to SECURE get, post, put, delete APi:
-//                Use antMatchers.hasAuthority/hasRole() or use @PreAuthorize annotation
-
 //                .antMatchers("/admin").hasAuthority(UserPermission.ADMIN_READ.getPermission())
 //                .antMatchers("/client").hasAnyAuthority("admin:read","client:read")
                 .antMatchers(HttpMethod.GET,"/allCus","/customerID/*").hasAuthority("customer:read")
                 .antMatchers(HttpMethod.POST,"/addCus").hasAuthority(UserPermission.CUSTOMER_WRITE.getPermission())
                 .antMatchers(HttpMethod.PUT,"/updateCus/*").hasAuthority(UserPermission.CUSTOMER_WRITE.getPermission())
                 .antMatchers(HttpMethod.DELETE,"/deleteCus/*").hasAuthority(UserPermission.CUSTOMER_WRITE.getPermission())
-
 
                 .anyRequest()
                 .authenticated()
