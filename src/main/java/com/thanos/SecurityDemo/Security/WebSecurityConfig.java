@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,6 +17,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -34,10 +36,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/client").hasAnyRole("ADMIN","CLIENT")
-                .antMatchers(HttpMethod.GET,"/allCus","/customerID/*").hasAnyRole("ADMIN","CLIENT")
-                .antMatchers(HttpMethod.POST,"/addCus").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT,"/updateCus/*").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE,"/deleteCus/*").hasRole("ADMIN")
+
+//                .antMatchers(HttpMethod.GET,"/allCus","/customerID/*").hasAnyRole("ADMIN","CLIENT")
+//                .antMatchers(HttpMethod.POST,"/addCus").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.PUT,"/updateCus/*").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.DELETE,"/deleteCus/*").hasRole("ADMIN")
+
+//                There are 2 ways to SECURE get, post, put, delete APi:
+//                Use antMatchers.hasAuthority/hasRole() or use @PreAuthorize annotation
+
+//                .antMatchers("/admin").hasAuthority(UserPermission.ADMIN_READ.getPermission())
+//                .antMatchers("/client").hasAnyAuthority("admin:read","client:read")
+                .antMatchers(HttpMethod.GET,"/allCus","/customerID/*").hasAuthority("customer:read")
+                .antMatchers(HttpMethod.POST,"/addCus").hasAuthority(UserPermission.CUSTOMER_WRITE.getPermission())
+                .antMatchers(HttpMethod.PUT,"/updateCus/*").hasAuthority(UserPermission.CUSTOMER_WRITE.getPermission())
+                .antMatchers(HttpMethod.DELETE,"/deleteCus/*").hasAuthority(UserPermission.CUSTOMER_WRITE.getPermission())
+
 
                 .anyRequest()
                 .authenticated()
@@ -51,19 +65,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails adminUser = User.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("tht1"))
-                .roles(UserRole.ADMIN.name())
+//                .roles(UserRole.ADMIN.name())
+                .authorities(UserRole.ADMIN.getGrantedAuthority())
                 .build();
 
         UserDetails clientUser = User.builder()
                 .username("client")
                 .password(passwordEncoder.encode("tht2"))
-                .roles(UserRole.CLIENT.name())
+//                .roles(UserRole.CLIENT.name())
+                .authorities(UserRole.CLIENT.getGrantedAuthority())
                 .build();
 
         UserDetails customerUser = User.builder()
                 .username("custom")
                 .password(passwordEncoder.encode("tht3"))
-                .roles(UserRole.CUSTOMER.name())
+//                .roles(UserRole.CUSTOMER.name())
+                .authorities(UserRole.CUSTOMER.getGrantedAuthority())
                 .build();
 
         return new InMemoryUserDetailsManager(
