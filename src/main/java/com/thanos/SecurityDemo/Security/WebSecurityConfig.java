@@ -17,6 +17,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -32,12 +33,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/client").hasAnyRole("ADMIN","CLIENT")
+                .antMatchers("/","/css/*","/js/*").permitAll()
+//                .antMatchers("/admin").hasRole("ADMIN")
+//                .antMatchers("/client").hasAnyRole("ADMIN","CLIENT")
 
 //                .antMatchers("/admin").hasAuthority(UserPermission.ADMIN_READ.getPermission())
-//                .antMatchers("/client").hasAnyAuthority("admin:read","client:read")
+//                .antMatchers("/client").hasAuthority("client:read")
                 .antMatchers(HttpMethod.GET,"/allCus","/customerID/*").hasAuthority("customer:read")
                 .antMatchers(HttpMethod.POST,"/addCus").hasAuthority(UserPermission.CUSTOMER_WRITE.getPermission())
                 .antMatchers(HttpMethod.PUT,"/updateCus/*").hasAuthority(UserPermission.CUSTOMER_WRITE.getPermission())
@@ -46,7 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin();
+                .formLogin()
+                .loginPage("/login").permitAll()
+                .defaultSuccessUrl("/cus",true);
     }
 
     @Override
