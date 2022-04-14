@@ -36,7 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/client").hasAnyRole("ADMIN","CLIENT")
-
 //                .antMatchers(HttpMethod.GET,"/allCus","/customerID/*").hasAnyRole("ADMIN","CLIENT")
 //                .antMatchers(HttpMethod.POST,"/addCus").hasRole("ADMIN")
 //                .antMatchers(HttpMethod.PUT,"/updateCus/*").hasRole("ADMIN")
@@ -51,8 +50,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/addCus").hasAuthority(UserPermission.CUSTOMER_WRITE.getPermission())
                 .antMatchers(HttpMethod.PUT,"/updateCus/*").hasAuthority(UserPermission.CUSTOMER_WRITE.getPermission())
                 .antMatchers(HttpMethod.DELETE,"/deleteCus/*").hasAuthority(UserPermission.CUSTOMER_WRITE.getPermission())
-
-
                 .anyRequest()
                 .authenticated()
                 .and()
