@@ -1,10 +1,9 @@
-package com.thanos.SecurityDemo.Service;
+package com.thanos.SecurityDemo.customerService;
 
 import com.thanos.SecurityDemo.Entity.Customer;
-import com.thanos.SecurityDemo.Repository.Repo;
+import com.thanos.SecurityDemo.customerRepository.Repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.http.HttpMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -53,7 +52,6 @@ public class ServiceImpl implements ServiceInterface, CommandLineRunner {
 
     @Override
     public void run(String... args) {
-
         List<Customer> customerList = Arrays.asList(
                 new Customer("John Cena", "Cena@gmail.com", 23),
                 new Customer("Phong Tom", "PhongTom@gmail.com", 99),

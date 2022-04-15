@@ -7,7 +7,14 @@
 <body>
 <div>CLIENT PAGE</div>
 <h1>This is client page</h1>
-<button>go to admin page</button>
+
+<button onclick="window.location.href = '/admin';">Go to admin page</button>
+
+<button onclick="window.location.href = '/cus';">CUSTOMER page</button>
+
+<form action="/allCus">
+    <button type="submit">Get customers list</button>
+</form>
 
 </body>
 </html>

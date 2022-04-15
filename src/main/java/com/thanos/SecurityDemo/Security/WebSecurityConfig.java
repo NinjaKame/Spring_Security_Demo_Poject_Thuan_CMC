@@ -1,10 +1,14 @@
 package com.thanos.SecurityDemo.Security;
 
+import com.thanos.SecurityDemo.daoUserService.DaoUserAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,23 +22,23 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final DaoUserAppService daoUserAppService;
 
-//    @Autowired
-//    public WebSecurityConfig(PasswordEncoder passwordEncoder) {
-//        this.passwordEncoder = passwordEncoder;
-//    }
+    @Autowired
+    public WebSecurityConfig(PasswordEncoder passwordEncoder, DaoUserAppService daoUserAppService) {
+        this.passwordEncoder = passwordEncoder;
+        this.daoUserAppService = daoUserAppService;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-//                Get XSRF-TOKEN in Cookies tab of @GetMapping -> Add X-XSRF-TOKEN to Headers KEY and VALUE -> Run api POST, PUT, DELETE
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
+//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
+                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
 
@@ -50,40 +54,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .httpBasic();
+                .formLogin()
+                .loginPage("/login").permitAll()
+                .defaultSuccessUrl("/cus",true)
+                .and()
+                .logout()
+                .permitAll()
+                .logoutSuccessUrl("/");
     }
 
     @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
+
     @Bean
-    protected UserDetailsService userDetailsService() {
-        UserDetails adminUser = User.builder()
-                .username("admin")
-                .password(passwordEncoder.encode("tht1"))
-//                .roles(UserRole.ADMIN.name())
-                .authorities(UserRole.ADMIN.getGrantedAuthority())
-                .build();
-
-        UserDetails clientUser = User.builder()
-                .username("client")
-                .password(passwordEncoder.encode("tht2"))
-//                .roles(UserRole.CLIENT.name())
-                .authorities(UserRole.CLIENT.getGrantedAuthority())
-                .build();
-
-        UserDetails customerUser = User.builder()
-                .username("custom")
-                .password(passwordEncoder.encode("tht3"))
-//                .roles(UserRole.CUSTOMER.name())
-                .authorities(UserRole.CUSTOMER.getGrantedAuthority())
-                .build();
-
-        return new InMemoryUserDetailsManager(
-                adminUser, clientUser, customerUser
-        );
-    }
-
-    @Override
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    public DaoAuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(daoUserAppService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
     }
 }

@@ -1,4 +1,4 @@
-package com.thanos.SecurityDemo.Service;
+package com.thanos.SecurityDemo.customerService;
 
 import com.thanos.SecurityDemo.Entity.Customer;
 
