@@ -1,6 +1,8 @@
 package com.thanos.SecurityDemo.Security;
 
+import com.auth0.jwt.algorithms.Algorithm;
 import com.thanos.SecurityDemo.daoUserService.DaoUserAppService;
+import com.thanos.SecurityDemo.filter.CustomAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,17 +10,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
+import javax.crypto.SecretKey;
 
 @Configuration
 @EnableWebSecurity
@@ -27,21 +26,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
     private final DaoUserAppService daoUserAppService;
+    private final Algorithm algorithm;
 
     @Autowired
-    public WebSecurityConfig(PasswordEncoder passwordEncoder, DaoUserAppService daoUserAppService) {
+    public WebSecurityConfig(PasswordEncoder passwordEncoder, DaoUserAppService daoUserAppService, Algorithm algorithm) {
         this.passwordEncoder = passwordEncoder;
         this.daoUserAppService = daoUserAppService;
+        this.algorithm = algorithm;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
                 .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilter(new CustomAuthenticationFilter(authenticationManager(), this.algorithm))
+
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-
                 .antMatchers("/admin").hasRole(UserRole.ADMIN.name())
                 .antMatchers("/client").hasAnyRole("ADMIN","CLIENT")
 //                .antMatchers("/admin").hasAuthority(UserPermission.ADMIN_READ.getPermission())
@@ -75,4 +78,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
+
+//    @Override
+//    protected AuthenticationManager authenticationManager() throws Exception {
+//        return (AuthenticationManager) authenticationProvider();
+//    }
 }
