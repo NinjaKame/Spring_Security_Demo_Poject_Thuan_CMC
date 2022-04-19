@@ -3,6 +3,7 @@ package com.thanos.SecurityDemo.Security;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.thanos.SecurityDemo.daoUserService.DaoUserAppService;
 import com.thanos.SecurityDemo.filter.CustomAuthenticationFilter;
+import com.thanos.SecurityDemo.filter.CustomAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.crypto.SecretKey;
 
@@ -42,9 +44,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new CustomAuthenticationFilter(authenticationManager(), this.algorithm))
+                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/","/request/refreshToken").permitAll()
                 .antMatchers("/admin").hasRole(UserRole.ADMIN.name())
                 .antMatchers("/client").hasAnyRole("ADMIN","CLIENT")
 //                .antMatchers("/admin").hasAuthority(UserPermission.ADMIN_READ.getPermission())
@@ -78,9 +81,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
-
-//    @Override
-//    protected AuthenticationManager authenticationManager() throws Exception {
-//        return (AuthenticationManager) authenticationProvider();
-//    }
 }
