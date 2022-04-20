@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,13 +42,13 @@ public class UserAppController {
         this.daoUserAppService = daoUserAppService;
     }
 
-    @GetMapping("/allUser")
+    @GetMapping("allUser")
     @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<List<UserApp>> getUserAppTable(){
         return new ResponseEntity<>(userAppService.getAllUserApp(), HttpStatus.OK);
     }
 
-    @GetMapping("/request/refreshToken")
+    @GetMapping("request/refreshToken")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -58,7 +59,7 @@ public class UserAppController {
                 String username = decodedJWT.getSubject();
                 UserDetails loadUser = daoUserAppService.loadUserByUsername(username);
 
-                String access_token = JWT.create()
+                String new_access_token = JWT.create()
                         .withSubject(loadUser.getUsername())
                         .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
@@ -66,7 +67,7 @@ public class UserAppController {
                         .sign(new AlgorithmConfig().getMyAlgo());
 
                 Map<String, String> tokens = new HashMap<>();
-                tokens.put("access_token", access_token);
+                tokens.put("new_access_token", new_access_token);
                 tokens.put("refresh_token", refresh_token);
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
