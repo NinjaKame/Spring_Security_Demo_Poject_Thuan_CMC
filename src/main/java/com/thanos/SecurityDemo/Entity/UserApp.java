@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -20,15 +21,18 @@ public class UserApp {
     private Long id;
 
     @Column(name = "Name", nullable = false)
+    @NotNull
     private String name;
 
     @Column(name = "Email")
     private String email;
 
     @Column(name = "Password", nullable = false)
+    @NotNull
     private String password;
 
     @Column(name = "Role", nullable = false)
+    @NotNull
     private String role;
 
     public UserApp(String name, String email, String password, String role) {

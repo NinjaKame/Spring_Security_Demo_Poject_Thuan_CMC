@@ -1,14 +1,14 @@
 package com.thanos.SecurityDemo.Entity;
 
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Accessors(chain = true)
@@ -22,13 +22,17 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "Name", nullable = false)
+    @Column(name = "Name")
+    @NotNull
     private String name;
 
     @Column(name = "Email")
     private String email;
 
-    @Column(name = "Age", nullable = false)
+    @Column(name = "Age")
+    @NotNull
+    @Min(message = "Must be older than 10", value = 10)
+    @Max(message = "Thanos", value = 100)
     private int age;
 
     public Customer(String name, String email, int age) {
