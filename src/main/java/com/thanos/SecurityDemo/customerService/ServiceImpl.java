@@ -1,30 +1,33 @@
 package com.thanos.SecurityDemo.customerService;
 
 import com.thanos.SecurityDemo.Entity.Customer;
-import com.thanos.SecurityDemo.customerRepository.Repo;
+import com.thanos.SecurityDemo.Entity.Product;
+import com.thanos.SecurityDemo.customerRepository.CustomerRepo;
+import com.thanos.SecurityDemo.productRepository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ServiceImpl implements ServiceInterface, CommandLineRunner {
 
     @Autowired
-    private Repo repository;
+    private CustomerRepo cusRepository;
+
+    @Autowired
+    private ProductRepo productRepo;
 
     @Override
     public List<Customer> getAllCustomer() {
-        return repository.findAll();
+        return cusRepository.findAll();
     }
 
     @Override
     public Customer getById(int id) {
-        Optional<Customer> result = repository.findById(id);
+        Optional<Customer> result = cusRepository.findById(id);
         if (result.isPresent()){
             return result.get();
         } else {
@@ -34,19 +37,19 @@ public class ServiceImpl implements ServiceInterface, CommandLineRunner {
 
     @Override
     public Customer addCustomer(Customer cus) {
-        return repository.save(cus);
+        return cusRepository.save(cus);
     }
 
     @Override
     public Customer updateCustomer(int id, Customer updateCus) {
-        Customer oldCustomer = repository.getById(id);
+        Customer oldCustomer = cusRepository.getById(id);
         oldCustomer.setName(updateCus.getName()).setEmail(updateCus.getEmail()).setAge(updateCus.getAge());
-        return repository.save(oldCustomer);
+        return cusRepository.save(oldCustomer);
     }
 
     @Override
     public void deleteCustomer(int id) {
-        repository.deleteById(id);
+        cusRepository.deleteById(id);
     }
 
 
@@ -56,10 +59,30 @@ public class ServiceImpl implements ServiceInterface, CommandLineRunner {
                 new Customer("John Cena", "Cena@gmail.com", 23),
                 new Customer("Phong Tom", "PhongTom@gmail.com", 99),
                 new Customer("Binh Ty", "BinhTy@gmail.com", 96),
-                new Customer("Cong Phuong", "CongPhuong@gmail.com", 27),
                 new Customer("Lionel Messi", "Messi@gmail.com", 10),
                 new Customer("Kento Momota", "Momota@gmail.com", 30)
         );
-        repository.saveAll(customerList);
+
+        List<Product> productList = Arrays.asList(
+                new Product("Sport Bike"),
+                new Product("Super Car"),
+                new Product("Iphone"),
+                new Product("Ipad"),
+                new Product("Ipod"),
+                new Product("MacBook")
+        );
+        productRepo.saveAll(productList);
+        List<Product> list1 = productRepo.findAll().stream().filter(product -> product.getName().length()>=7).collect(Collectors.toList());
+        List<Product> list2 = productRepo.findAll().stream().filter(product -> product.getName().startsWith("I")).collect(Collectors.toList());
+        List<Product> list3 = productRepo.findAll().stream().filter(product -> product.getName().startsWith("S")).collect(Collectors.toList());
+        List<Product> list4 = productRepo.findAll().stream().filter(product -> product.getName().contains("o")).collect(Collectors.toList());
+        List<Product> list5 = productRepo.findAll().stream().filter(product -> product.getName().contains("a")).collect(Collectors.toList());
+        customerList.get(0).setProductList(list1);
+        customerList.get(1).setProductList(list2);
+        customerList.get(2).setProductList(list3);
+        customerList.get(3).setProductList(list4);
+        customerList.get(4).setProductList(list5);
+
+        cusRepository.saveAll(customerList);
     }
 }

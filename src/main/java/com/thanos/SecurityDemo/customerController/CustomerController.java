@@ -1,7 +1,9 @@
 package com.thanos.SecurityDemo.customerController;
 
 import com.thanos.SecurityDemo.Entity.Customer;
+import com.thanos.SecurityDemo.Entity.Product;
 import com.thanos.SecurityDemo.customerService.ServiceInterface;
+import com.thanos.SecurityDemo.productRepository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +17,19 @@ public class CustomerController {
 
     @Autowired
     private ServiceInterface serviceInterface;
+    @Autowired
+    private ProductRepo productRepo;
 
     @GetMapping("allCus")
 //    @PreAuthorize("hasAuthority('customer:read')")
     public ResponseEntity<List<Customer>> getAllCustomer(){
         return new ResponseEntity<>(serviceInterface.getAllCustomer(), HttpStatus.OK);
+    }
+
+    @GetMapping("allPro")
+//    @PreAuthorize("hasAuthority('customer:read')")
+    public ResponseEntity<List<Product>> getAllProduct(){
+        return new ResponseEntity<>(productRepo.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("customerID/{id}")

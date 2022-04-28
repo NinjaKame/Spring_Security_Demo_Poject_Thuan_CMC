@@ -1,7 +1,9 @@
 package com.thanos.SecurityDemo.Security;
 
 import com.thanos.SecurityDemo.daoUserService.DaoUserAppService;
+import org.apache.catalina.servlets.WebdavServlet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -47,13 +49,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login").permitAll()
-                .defaultSuccessUrl("/cus",true)
-                .and()
-                .logout()
-                .permitAll()
-                .logoutSuccessUrl("/");
+                .httpBasic();
+        http.headers().frameOptions().disable();
+//                .formLogin()
+//                .loginPage("/login").permitAll()
+//                .defaultSuccessUrl("/cus",true)
+//                .and()
+//                .logout()
+//                .permitAll()
+//                .logoutSuccessUrl("/");
     }
 
     @Override

@@ -4,5 +4,5 @@ import com.thanos.SecurityDemo.Entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface Repo extends JpaRepository<Customer, Integer> {
+public interface CustomerRepo extends JpaRepository<Customer,Integer> {
 }

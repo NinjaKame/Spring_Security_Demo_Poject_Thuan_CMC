@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @Accessors(chain = true)
@@ -22,18 +23,25 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "Name")
+    @Column
     @NotNull
     private String name;
 
-    @Column(name = "Email")
+    @Column
     private String email;
 
-    @Column(name = "Age")
+    @Column
     @NotNull
-    @Min(message = "Must be older than 10", value = 10)
-    @Max(message = "Thanos", value = 100)
+    @Min(value = 10)
+    @Max(value = 100)
     private int age;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> productList;
 
     public Customer(String name, String email, int age) {
         this.name = name;
