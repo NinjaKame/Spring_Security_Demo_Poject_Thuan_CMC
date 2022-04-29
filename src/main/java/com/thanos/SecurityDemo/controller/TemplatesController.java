@@ -1,4 +1,4 @@
-package com.thanos.SecurityDemo.customerController;
+package com.thanos.SecurityDemo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

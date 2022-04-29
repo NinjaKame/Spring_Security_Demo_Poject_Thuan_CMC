@@ -1,4 +1,4 @@
-package com.thanos.SecurityDemo.Security;
+package com.thanos.SecurityDemo.security;
 
 
 import org.springframework.context.annotation.Bean;
@@ -11,6 +11,6 @@ public class PasswordConfig {
 
     @Bean
     public PasswordEncoder passwordEncrypted(){
-        return new BCryptPasswordEncoder(10);
+        return new BCryptPasswordEncoder(5);
     }
 }

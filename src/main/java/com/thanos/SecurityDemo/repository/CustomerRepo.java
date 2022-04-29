@@ -1,6 +1,6 @@
-package com.thanos.SecurityDemo.customerRepository;
+package com.thanos.SecurityDemo.repository;
 
-import com.thanos.SecurityDemo.Entity.Customer;
+import com.thanos.SecurityDemo.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

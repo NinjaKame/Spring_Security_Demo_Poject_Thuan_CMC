@@ -1,6 +1,6 @@
-package com.thanos.SecurityDemo.userRepository;
+package com.thanos.SecurityDemo.repository;
 
-import com.thanos.SecurityDemo.Entity.UserApp;
+import com.thanos.SecurityDemo.entity.UserApp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

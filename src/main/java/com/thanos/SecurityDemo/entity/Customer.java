@@ -1,6 +1,9 @@
-package com.thanos.SecurityDemo.Entity;
+package com.thanos.SecurityDemo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -36,11 +39,13 @@ public class Customer {
     @Max(value = 100)
     private int age;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
+            name = "Customer_Product",
             joinColumns = @JoinColumn(name = "customer_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+//    @JsonManagedReference
+//    @JsonBackReference
     private List<Product> productList;
 
     public Customer(String name, String email, int age) {

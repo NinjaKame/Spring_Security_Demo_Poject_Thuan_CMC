@@ -1,6 +1,6 @@
-package com.thanos.SecurityDemo.Entity;
+package com.thanos.SecurityDemo.entity;
 
-import com.thanos.SecurityDemo.Security.UserRole;
+import com.thanos.SecurityDemo.security.enums.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

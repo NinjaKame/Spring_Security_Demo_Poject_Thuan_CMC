@@ -1,13 +1,11 @@
-package com.thanos.SecurityDemo.Entity;
+package com.thanos.SecurityDemo.entity;
 
-import com.thanos.SecurityDemo.Security.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

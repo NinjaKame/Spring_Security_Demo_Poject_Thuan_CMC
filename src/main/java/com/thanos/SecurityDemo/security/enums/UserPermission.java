@@ -1,4 +1,4 @@
-package com.thanos.SecurityDemo.Security;
+package com.thanos.SecurityDemo.security.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

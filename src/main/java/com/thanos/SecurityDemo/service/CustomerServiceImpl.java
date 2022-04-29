@@ -1,9 +1,9 @@
-package com.thanos.SecurityDemo.customerService;
+package com.thanos.SecurityDemo.service;
 
-import com.thanos.SecurityDemo.Entity.Customer;
-import com.thanos.SecurityDemo.Entity.Product;
-import com.thanos.SecurityDemo.customerRepository.CustomerRepo;
-import com.thanos.SecurityDemo.productRepository.ProductRepo;
+import com.thanos.SecurityDemo.entity.Customer;
+import com.thanos.SecurityDemo.entity.Product;
+import com.thanos.SecurityDemo.repository.CustomerRepo;
+import com.thanos.SecurityDemo.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class ServiceImpl implements ServiceInterface, CommandLineRunner {
+public class CustomerServiceImpl implements CustomerServiceInterface, CommandLineRunner {
 
     @Autowired
     private CustomerRepo cusRepository;
@@ -26,12 +26,27 @@ public class ServiceImpl implements ServiceInterface, CommandLineRunner {
     }
 
     @Override
-    public Customer getById(int id) {
+    public List<Product> getAllProduct() {
+        return productRepo.findAll();
+    }
+
+    @Override
+    public Product getProductById(long id) {
+        Optional<Product> result = productRepo.findById(id);
+        if (result.isPresent()){
+            return result.get();
+        } else {
+            throw new NoSuchElementException("Product ID: " +id+ " NOT found. Please try again");
+        }
+    }
+
+    @Override
+    public Customer getCustomerById(int id) {
         Optional<Customer> result = cusRepository.findById(id);
         if (result.isPresent()){
             return result.get();
         } else {
-            throw new  NoSuchElementException("Customer ID: " +id+ " NOT found. Please try again");
+            throw new NoSuchElementException("Customer ID: " +id+ " NOT found. Please try again");
         }
     }
 

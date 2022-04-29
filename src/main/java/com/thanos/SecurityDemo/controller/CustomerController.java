@@ -1,9 +1,8 @@
-package com.thanos.SecurityDemo.customerController;
+package com.thanos.SecurityDemo.controller;
 
-import com.thanos.SecurityDemo.Entity.Customer;
-import com.thanos.SecurityDemo.Entity.Product;
-import com.thanos.SecurityDemo.customerService.ServiceInterface;
-import com.thanos.SecurityDemo.productRepository.ProductRepo;
+import com.thanos.SecurityDemo.entity.Customer;
+import com.thanos.SecurityDemo.entity.Product;
+import com.thanos.SecurityDemo.service.CustomerServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,44 +15,46 @@ import java.util.List;
 public class CustomerController {
 
     @Autowired
-    private ServiceInterface serviceInterface;
-    @Autowired
-    private ProductRepo productRepo;
+    private CustomerServiceInterface customerService;
 
     @GetMapping("allCus")
 //    @PreAuthorize("hasAuthority('customer:read')")
     public ResponseEntity<List<Customer>> getAllCustomer(){
-        return new ResponseEntity<>(serviceInterface.getAllCustomer(), HttpStatus.OK);
+        return new ResponseEntity<>(customerService.getAllCustomer(), HttpStatus.OK);
     }
 
     @GetMapping("allPro")
-//    @PreAuthorize("hasAuthority('customer:read')")
     public ResponseEntity<List<Product>> getAllProduct(){
-        return new ResponseEntity<>(productRepo.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(customerService.getAllProduct(), HttpStatus.OK);
     }
 
     @GetMapping("customerID/{id}")
 //    @PreAuthorize("hasAuthority('customer:read')")
+    public ResponseEntity<Product> getProductById(@PathVariable int id){
+        return new ResponseEntity<>(customerService.getProductById(id),HttpStatus.FOUND);
+    }
+    @GetMapping("customerID/{id}")
+//    @PreAuthorize("hasAuthority('customer:read')")
     public ResponseEntity<Customer> getCustomerById(@PathVariable int id){
-        return new ResponseEntity<>(serviceInterface.getById(id),HttpStatus.FOUND);
+        return new ResponseEntity<>(customerService.getCustomerById(id),HttpStatus.FOUND);
     }
 
     @PostMapping("addCus")
 //    @PreAuthorize("hasAuthority('customer:write')")
     public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer){
-        return new ResponseEntity<>(serviceInterface.addCustomer(customer),HttpStatus.CREATED);
+        return new ResponseEntity<>(customerService.addCustomer(customer),HttpStatus.CREATED);
     }
 
     @PutMapping("updateCus/{id}")
 //    @PreAuthorize("hasAuthority('customer:write')")
     public ResponseEntity<Customer> updateCustomer(@PathVariable int id, @RequestBody Customer cus){
-        return new ResponseEntity<>(serviceInterface.updateCustomer(id, cus),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(customerService.updateCustomer(id, cus),HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("deleteCus/{id}")
 //    @PreAuthorize("hasAuthority('customer:write')")
     public ResponseEntity<Void> deleteCustomer(@PathVariable int id){
-        serviceInterface.deleteCustomer(id);
+        customerService.deleteCustomer(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

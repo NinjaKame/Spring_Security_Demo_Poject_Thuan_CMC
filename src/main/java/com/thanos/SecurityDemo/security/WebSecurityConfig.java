@@ -1,9 +1,9 @@
-package com.thanos.SecurityDemo.Security;
+package com.thanos.SecurityDemo.security;
 
-import com.thanos.SecurityDemo.daoUserService.DaoUserAppService;
-import org.apache.catalina.servlets.WebdavServlet;
+import com.thanos.SecurityDemo.security.enums.UserPermission;
+import com.thanos.SecurityDemo.security.enums.UserRole;
+import com.thanos.SecurityDemo.service.DaoUserAppService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -50,6 +50,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 .httpBasic();
+
+//        This function is to connect to H2 database on browswer
         http.headers().frameOptions().disable();
 //                .formLogin()
 //                .loginPage("/login").permitAll()

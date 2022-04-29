@@ -1,7 +1,7 @@
-package com.thanos.SecurityDemo.userController;
+package com.thanos.SecurityDemo.controller;
 
-import com.thanos.SecurityDemo.Entity.UserApp;
-import com.thanos.SecurityDemo.userService.UserAppService;
+import com.thanos.SecurityDemo.entity.UserApp;
+import com.thanos.SecurityDemo.service.UserAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
