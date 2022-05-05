@@ -1,12 +1,11 @@
-package com.thanos.SecurityDemo.Entity;
+package com.thanos.SecurityDemo.entity;
 
-import com.thanos.SecurityDemo.Security.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -20,15 +19,18 @@ public class UserApp {
     private Long id;
 
     @Column(name = "Name", nullable = false)
+    @NotNull
     private String name;
 
     @Column(name = "Email")
     private String email;
 
     @Column(name = "Password", nullable = false)
+    @NotNull
     private String password;
 
     @Column(name = "Role", nullable = false)
+    @NotNull
     private String role;
 
     public UserApp(String name, String email, String password, String role) {

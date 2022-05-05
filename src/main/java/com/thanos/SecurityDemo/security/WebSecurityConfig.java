@@ -1,8 +1,10 @@
-package com.thanos.SecurityDemo.Security;
+package com.thanos.SecurityDemo.security;
 
-import com.thanos.SecurityDemo.daoUserService.DaoUserAppService;
 import com.thanos.SecurityDemo.filter.CustomAuthenticationFilter;
 import com.thanos.SecurityDemo.filter.CustomAuthorizationFilter;
+import com.thanos.SecurityDemo.security.enums.UserPermission;
+import com.thanos.SecurityDemo.security.enums.UserRole;
+import com.thanos.SecurityDemo.service.DaoUserAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +18,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -54,14 +55,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .anyRequest()
                 .authenticated()
-//                .and()
+                .and()
+                .httpBasic();
+
+//        This function is to connect to H2 database on browswer
+        http.headers().frameOptions().disable();
 //                .formLogin()
 //                .loginPage("/login").permitAll()
 //                .defaultSuccessUrl("/cus",true)
-                .and()
-                .logout()
+//                .and()
+//                .logout()
 //                .permitAll()
-                .logoutSuccessUrl("/");
+//                .logoutSuccessUrl("/");
+
     }
 
     @Override

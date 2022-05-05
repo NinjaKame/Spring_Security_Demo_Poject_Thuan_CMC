@@ -1,13 +1,17 @@
-package com.thanos.SecurityDemo.Entity;
+package com.thanos.SecurityDemo.entity;
 
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
-import java.io.Serializable;
-import java.util.ArrayList;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -22,14 +26,27 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "Name", nullable = false)
+    @Column
+    @NotNull
     private String name;
 
-    @Column(name = "Email")
+    @Column
     private String email;
 
-    @Column(name = "Age", nullable = false)
+    @Column
+    @NotNull
+    @Min(value = 10)
+    @Max(value = 100)
     private int age;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "Customer_Product",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+//    @JsonManagedReference
+//    @JsonBackReference
+    private List<Product> productList;
 
     public Customer(String name, String email, int age) {
         this.name = name;

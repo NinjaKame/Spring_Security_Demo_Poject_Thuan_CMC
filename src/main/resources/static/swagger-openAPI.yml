@@ -1,0 +1,18 @@
+openapi: 3.0.0
+info:
+  title: Practice openAPI
+  description: This is a simple Spring Boot Security application.
+  version: v1.0
+paths:
+  /allCus:
+    get:
+      tags:
+        - Customer
+      summary: Get the list of customers.
+      description: This is the api to get all the customers.
+      operationID: getAllCustomer
+
+
+servers:
+  - url: http://localhost:8080/api/
+    description:

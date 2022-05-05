@@ -1,9 +1,9 @@
-package com.thanos.SecurityDemo.daoUserService;
+package com.thanos.SecurityDemo.service;
 
-import com.thanos.SecurityDemo.Entity.DaoUserApp;
-import com.thanos.SecurityDemo.Entity.UserApp;
-import com.thanos.SecurityDemo.Security.UserRole;
-import com.thanos.SecurityDemo.userRepository.UserAppRepo;
+import com.thanos.SecurityDemo.entity.DaoUserApp;
+import com.thanos.SecurityDemo.entity.UserApp;
+import com.thanos.SecurityDemo.security.enums.UserRole;
+import com.thanos.SecurityDemo.repository.UserAppRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-package com.thanos.SecurityDemo.Security;
+package com.thanos.SecurityDemo.security;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.context.annotation.Bean;
