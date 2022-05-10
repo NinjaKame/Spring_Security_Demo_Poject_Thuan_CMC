@@ -28,7 +28,7 @@ public class CustomerController {
         return new ResponseEntity<>(customerService.getAllProduct(), HttpStatus.OK);
     }
 
-    @GetMapping("customerID/{id}")
+    @GetMapping("productID/{id}")
 //    @PreAuthorize("hasAuthority('customer:read')")
     public ResponseEntity<Product> getProductById(@PathVariable int id){
         return new ResponseEntity<>(customerService.getProductById(id),HttpStatus.FOUND);
